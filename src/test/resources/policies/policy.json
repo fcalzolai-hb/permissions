@@ -1,0 +1,26 @@
+[
+  {
+    "actions": [
+      "update_translation",
+      "create_regional_key",
+      "create_partner_key"
+    ],
+    "effect": "allow",
+    "resources": [
+      {
+        "locales": [
+          "id",
+          "en-GB"
+        ],
+        "projects": [
+          {
+            "id": "ea8b601b-0ebc-4310-b512-ee7df8240e9f"
+          },
+          {
+            "id": "128b601b-0ebc-4310-b512-ee7df8240e9f"
+          }
+        ]
+      }
+    ]
+  }
+]
