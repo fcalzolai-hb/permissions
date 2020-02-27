@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.babylon.permissions.PermissionsApplication;
 import com.babylon.permissions.dao.Role;
-import com.babylon.permissions.repository.RoleRepository;
+import com.babylon.permissions.repository.old.RoleRepository_0;
 import com.babylon.permissions.sysytem.NowProvider;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ public class RoleRepositoryTest_0 {
   private NowProvider nowProvider;
 
   @Autowired
-  private RoleRepository roleRepository;
+  private RoleRepository_0 roleRepository;
 
   @Test
   public void findRoleByRoleNameAndProject() throws IOException {

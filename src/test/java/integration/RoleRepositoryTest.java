@@ -2,6 +2,7 @@ package integration;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import com.babylon.permissions.PermissionsApplication;
 import com.babylon.permissions.dao.Role;
@@ -17,8 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.google.common.io.Resources.getResource;
 import static java.util.UUID.randomUUID;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,13 +30,25 @@ public class RoleRepositoryTest {
   private static final String TRANSLATION_MANAGER = "translation_manager";
   private static final String REVIEWER = "reviewer";
   private static final String SHARED_PROJECT = "ea8b601b-0ebc-4310-b512-ee7df8240e9f";
-  private static final String CREATE_REGIONAL_KEY = "create_regional_key";
 
   @Autowired
   private NowProvider nowProvider;
 
   @Autowired
   private RoleRepository roleRepository;
+
+  @Test
+  public void findActions() throws IOException {
+    initDB();
+    String role = roleRepository.findActions(TRANSLATION_MANAGER, "en-GB", SHARED_PROJECT);
+    assertTrue(role.contains("update_translation"));
+    assertTrue(role.contains("create_partner_key"));
+
+    role = roleRepository.findActions(REVIEWER, "en-GB", SHARED_PROJECT);
+    assertTrue(role.contains("create_regional_key"));
+    assertTrue(role.contains("update_translation"));
+    assertTrue(role.contains("create_partner_key"));
+  }
 
   @Test
   public void findRoleByRoleNameAndProject() throws IOException {
@@ -49,18 +63,18 @@ public class RoleRepositoryTest {
   @Test
   public void findRoleByRoleName() throws IOException {
     initDB();
-    Role role1 = roleRepository.findRole(TRANSLATION_MANAGER, "es-ES");
-    assertNotNull(role1);
+    List<Role> roles = roleRepository.findRole(TRANSLATION_MANAGER, "es-ES");
+    assertEquals(1, roles.size());
 
-    Role role2 = roleRepository.findRole(REVIEWER, "es-ES");
-    assertNull(role2);
+    roles = roleRepository.findRole(REVIEWER, "es-ES");
+    assertEquals(0, roles.size());
   }
 
   @Test
   public void findRole() throws IOException {
     initDB();
-    Role role = roleRepository.findRole("es-ES");
-    assertNotNull(role);
+    List<Role> roles = roleRepository.findRole("es-ES");
+    assertEquals(1, roles.size());
   }
 
   private Role createRoleAndSave(String roleName, String fileName) throws IOException {
