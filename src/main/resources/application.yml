@@ -13,4 +13,7 @@ spring:
         password: "postgres"
         driver-class-name: org.postgresql.Driver
 
+# logs the SQL statements
+logging.level.org.hibernate.SQL: DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 

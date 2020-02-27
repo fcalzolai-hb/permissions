@@ -14,29 +14,25 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-@Entity(name = "Member")
+@Entity(name = "Role")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @TypeDef(
-    name = "json",
+    name = "jsonb",
     typeClass = JsonBinaryType.class
 )
-public class Member {
+public class Role {
 
   @Id
   private UUID id;
-  private String externalId;
-  private byte[] encryptedFullName;
-  private byte[] encryptedEmail;
+  private String name;
 
-  @Type(type = "json")
-  @Column(columnDefinition = "json")
+  @Type(type = "jsonb")
+  @Column(columnDefinition = "jsonb")
   private String policy;
 
   private OffsetDateTime createdAt;
   private OffsetDateTime updatedAt;
-  private OffsetDateTime lastActiveAt;
-
 }

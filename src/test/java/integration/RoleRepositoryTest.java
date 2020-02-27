@@ -5,11 +5,10 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import com.babylon.permissions.PermissionsApplication;
-import com.babylon.permissions.dao.Member;
-import com.babylon.permissions.repository.MemberRepository;
+import com.babylon.permissions.dao.Role;
+import com.babylon.permissions.repository.RoleRepository;
 import com.babylon.permissions.sysytem.NowProvider;
 import com.google.common.io.Resources;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,55 +19,74 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static com.google.common.io.Resources.getResource;
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {PermissionsApplication.class})
-public class MemberRepositoryTest {
+public class RoleRepositoryTest {
 
   @Autowired
   private NowProvider nowProvider;
 
   @Autowired
-  private MemberRepository memberRepository;
+  private RoleRepository roleRepository;
 
   @Test
-  public void findAllWithNotNullPolicy() throws IOException {
-    createMemberAndSave("./policies/policy.json");
-    List<Member> members = memberRepository.findAllWithNotNullPolicy(0);
-    assertTrue(members.size() > 0);
+  public void findAllByProjectWithParam_0() {
+    List<Role> roles = roleRepository.findAllByProject_1("ea8b601b-0ebc-4310-b512-ee7df8240e9f");
+    assertTrue(roles.size() > 0);
+  }
+
+  @Test
+  public void findAllByProjectWithParam_1() {
+    List<Role> roles = roleRepository.findAllByProject_1("ea8b601b-0ebc-4310-b512-ee7df8240e9f");
+    assertTrue(roles.size() > 0);
+  }
+
+  @Test
+  public void findAllByProjectWithParam_2() {
+    List<Role> roles = roleRepository.findAllByProject_2("ea8b601b-0ebc-4310-b512-ee7df8240e9f");
+    assertTrue(roles.size() > 0);
+  }
+
+  @Test
+  public void findAllByProject() {
+    List<Role> roles = roleRepository.findAllByProject();
+    assertTrue(roles.size() > 0);
+  }
+
+  @Test
+  public void findAllWithNotNullPolicy() {
+    List<Role> roles = roleRepository.findAllWithNotNullPolicy(0);
+    assertTrue(roles.size() > 0);
   }
 
   @Test
   public void findByParam() throws IOException {
-    Member member = createMemberAndSave("./policies/policy.json");
-    Member byParam = memberRepository.findByParam(member.getId());
-    System.out.println(byParam);
+    Role role = createRoleAndSave("./policies/policy.json");
+    Role byParam = roleRepository.findByParam(role.getId());
+    assertNotNull(byParam);
   }
 
   @Test
   public void save() throws IOException {
-    Member save = createMemberAndSave("./policies/policy.json");
+    Role save = createRoleAndSave("./policies/policy.json");
     assertNotNull(save.getId());
   }
 
-  private Member createMemberAndSave(String fileName) throws IOException {
+  private Role createRoleAndSave(String fileName) throws IOException {
     String jsonPolicy = loadStringFromFile(fileName);
 
-    Member member = Member.builder()
+    Role role = Role.builder()
         .id(randomUUID())
-        .externalId(randomUUID().toString())
-        .encryptedEmail(randomUUID().toString().getBytes())
-        .encryptedFullName(randomUUID().toString().getBytes())
+        .name(randomUUID().toString())
         .policy(jsonPolicy)
         .createdAt(nowProvider.nowUtc())
         .updatedAt(nowProvider.nowUtc())
-        .lastActiveAt(nowProvider.nowUtc())
         .build();
 
-    return memberRepository.save(member);
+    return roleRepository.save(role);
   }
 
   private String loadStringFromFile(String fileName) throws IOException {

@@ -6,7 +6,7 @@ create table member
  external_id              text NOT NULL,
  encrypted_full_name      bytea NOT NULL,
  encrypted_email          bytea NOT NULL,
- policy                   jsonb,
+ policy                   json,
  created_at               timestamp(3) NOT NULL DEFAULT current_timestamp,
  updated_at               timestamp(3) NOT NULL DEFAULT current_timestamp,
  last_active_at           timestamp(3) NOT NULL DEFAULT current_timestamp,
