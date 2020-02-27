@@ -64,4 +64,44 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
       nativeQuery = true)
   List<Role> findAllByProject_2(String projectId);
 
+
+  @Query(value = "select effect, actions, policyItem, *, locales\n" +
+      "from role,\n" +
+      "     jsonb_array_elements(policy) policyItem,\n" +
+      "     jsonb_array_elements(policyItem->'resources') resources,\n" +
+      "     jsonb_extract_path(policyItem, 'effect') effect,\n" +
+      "     jsonb_extract_path(policyItem, 'actions') actions,\n" +
+      "     jsonb_array_elements(resources->'locales') locales\n" +
+      "where jsonb_exists_any(locales,array[:locale])",
+      nativeQuery = true)
+  Role findRole(@Param("locale") String locale);
+
+
+  @Query(value = "select effect, actions, policyItem, *, locales\n" +
+      "from role,\n" +
+      "     jsonb_array_elements(policy) policyItem,\n" +
+      "     jsonb_array_elements(policyItem->'resources') resources,\n" +
+      "     jsonb_extract_path(policyItem, 'effect') effect,\n" +
+      "     jsonb_extract_path(policyItem, 'actions') actions,\n" +
+      "     jsonb_array_elements(resources->'locales') locales\n" +
+      "where name = :rolename AND jsonb_exists_any(locales,array[:locale])",
+      nativeQuery = true)
+  Role findRole(@Param("rolename") String rolename, @Param("locale") String locale);
+
+
+  @Query(value = "select * \n" +
+      "from role,\n" +
+      "     jsonb_array_elements(policy) policyItem,\n" +
+      "     jsonb_array_elements(policyItem->'resources') resources,\n" +
+      "     jsonb_extract_path(policyItem, 'effect') effect,\n" +
+      "     jsonb_extract_path(policyItem, 'actions') actions,\n" +
+      "     jsonb_array_elements(resources->'projects') projects,\n" +
+      "     jsonb_array_elements(resources->'locales') locales\n" +
+      "where name = :rolename " +
+      "     AND jsonb_exists_any(locales,array[:locale])" +
+      "     AND jsonb_extract_path_text(projects, 'id') = :project",
+      nativeQuery = true)
+  Role findRole(@Param("rolename") String rolename,
+                @Param("locale") String locale,
+                @Param("project") String project);
 }

@@ -6,7 +6,7 @@ create table member
  external_id              text NOT NULL,
  encrypted_full_name      bytea NOT NULL,
  encrypted_email          bytea NOT NULL,
- policy                   json,
+ policy                   jsonb,
  created_at               timestamp(3) NOT NULL DEFAULT current_timestamp,
  updated_at               timestamp(3) NOT NULL DEFAULT current_timestamp,
  last_active_at           timestamp(3) NOT NULL DEFAULT current_timestamp,
@@ -71,3 +71,9 @@ create table la_group_roles
  created_at     timestamp(3) NOT NULL DEFAULT current_timestamp, --not a must if difficult to implement
  PRIMARY KEY (id)
 );
+
+create table test
+(
+ id          text PRIMARY KEY,
+ external_id text NOT NULL
+)

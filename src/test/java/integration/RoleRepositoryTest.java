@@ -2,7 +2,6 @@ package integration;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.List;
 
 import com.babylon.permissions.PermissionsApplication;
 import com.babylon.permissions.dao.Role;
@@ -19,12 +18,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static com.google.common.io.Resources.getResource;
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {PermissionsApplication.class})
 public class RoleRepositoryTest {
+
+  private static final String TRANSLATION_MANAGER = "translation_manager";
+  private static final String REVIEWER = "reviewer";
+  private static final String SHARED_PROJECT = "ea8b601b-0ebc-4310-b512-ee7df8240e9f";
+  private static final String CREATE_REGIONAL_KEY = "create_regional_key";
 
   @Autowired
   private NowProvider nowProvider;
@@ -33,54 +37,38 @@ public class RoleRepositoryTest {
   private RoleRepository roleRepository;
 
   @Test
-  public void findAllByProjectWithParam_0() {
-    List<Role> roles = roleRepository.findAllByProject_1("ea8b601b-0ebc-4310-b512-ee7df8240e9f");
-    assertTrue(roles.size() > 0);
+  public void findRoleByRoleNameAndProject() throws IOException {
+    initDB();
+    Role role = roleRepository.findRole(TRANSLATION_MANAGER, "en-GB", SHARED_PROJECT);
+    assertNotNull(role);
+
+    role = roleRepository.findRole(REVIEWER, "en-GB", SHARED_PROJECT);
+    assertNotNull(role);
   }
 
   @Test
-  public void findAllByProjectWithParam_1() {
-    List<Role> roles = roleRepository.findAllByProject_1("ea8b601b-0ebc-4310-b512-ee7df8240e9f");
-    assertTrue(roles.size() > 0);
+  public void findRoleByRoleName() throws IOException {
+    initDB();
+    Role role1 = roleRepository.findRole(TRANSLATION_MANAGER, "es-ES");
+    assertNotNull(role1);
+
+    Role role2 = roleRepository.findRole(REVIEWER, "es-ES");
+    assertNull(role2);
   }
 
   @Test
-  public void findAllByProjectWithParam_2() {
-    List<Role> roles = roleRepository.findAllByProject_2("ea8b601b-0ebc-4310-b512-ee7df8240e9f");
-    assertTrue(roles.size() > 0);
+  public void findRole() throws IOException {
+    initDB();
+    Role role = roleRepository.findRole("es-ES");
+    assertNotNull(role);
   }
 
-  @Test
-  public void findAllByProject() {
-    List<Role> roles = roleRepository.findAllByProject();
-    assertTrue(roles.size() > 0);
-  }
-
-  @Test
-  public void findAllWithNotNullPolicy() {
-    List<Role> roles = roleRepository.findAllWithNotNullPolicy(0);
-    assertTrue(roles.size() > 0);
-  }
-
-  @Test
-  public void findByParam() throws IOException {
-    Role role = createRoleAndSave("./policies/policy.json");
-    Role byParam = roleRepository.findByParam(role.getId());
-    assertNotNull(byParam);
-  }
-
-  @Test
-  public void save() throws IOException {
-    Role save = createRoleAndSave("./policies/policy.json");
-    assertNotNull(save.getId());
-  }
-
-  private Role createRoleAndSave(String fileName) throws IOException {
+  private Role createRoleAndSave(String roleName, String fileName) throws IOException {
     String jsonPolicy = loadStringFromFile(fileName);
 
     Role role = Role.builder()
         .id(randomUUID())
-        .name(randomUUID().toString())
+        .name(roleName)
         .policy(jsonPolicy)
         .createdAt(nowProvider.nowUtc())
         .updatedAt(nowProvider.nowUtc())
@@ -91,5 +79,12 @@ public class RoleRepositoryTest {
 
   private String loadStringFromFile(String fileName) throws IOException {
     return Resources.toString(getResource(fileName), Charset.defaultCharset());
+  }
+
+  private void initDB() throws IOException {
+    roleRepository.deleteAll();
+
+    createRoleAndSave(REVIEWER, "policies/reviewer_policy.json");
+    createRoleAndSave(TRANSLATION_MANAGER, "policies/translation_manager_policy.json");
   }
 }

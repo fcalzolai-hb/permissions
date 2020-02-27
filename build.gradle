@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        JACKSON = '2.9.9'
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.1.6.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
@@ -31,6 +37,13 @@ dependencies {
     implementation "org.postgresql:postgresql"
     implementation 'com.vladmihalcea:hibernate-types-52:2.9.3'
     implementation 'com.google.guava:guava:28.2-jre'
+    implementation 'org.apache.servicemix.specs:org.apache.servicemix.specs.jsr311-api-1.1.1:2.9.0'
+
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-properties:$JACKSON"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:$JACKSON"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$JACKSON"
+    implementation "com.fasterxml.jackson.core:jackson-core:$JACKSON"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$JACKSON"
 
     compileOnly 'org.projectlombok:lombok'
 

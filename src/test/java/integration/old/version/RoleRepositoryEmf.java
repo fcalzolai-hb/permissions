@@ -1,5 +1,6 @@
-package integration;
+package integration.old.version;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.babylon.permissions.PermissionsApplication;
@@ -43,5 +44,13 @@ public class RoleRepositoryEmf {
         "SELECT 1 ")
         .getResultList();
     System.out.println(resultList);
+  }
+
+  @Test
+  public void testTable() {
+    List resultList = entityManager.createNativeQuery(
+        "SELECT * FROM test")
+        .getResultList();
+    resultList.forEach((o) -> System.out.println(Arrays.toString((Object[]) o)));
   }
 }

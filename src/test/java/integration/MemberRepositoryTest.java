@@ -9,7 +9,6 @@ import com.babylon.permissions.dao.Member;
 import com.babylon.permissions.repository.MemberRepository;
 import com.babylon.permissions.sysytem.NowProvider;
 import com.google.common.io.Resources;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static com.google.common.io.Resources.getResource;
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -35,22 +33,29 @@ public class MemberRepositoryTest {
   private MemberRepository memberRepository;
 
   @Test
+  public void findMember() throws IOException {
+    createMemberAndSave("policies/translation_manager_policy.json");
+    Member member = memberRepository.findMember("en-GB");
+    assertNotNull(member);
+  }
+
+  @Test
   public void findAllWithNotNullPolicy() throws IOException {
-    createMemberAndSave("./policies/policy.json");
+    createMemberAndSave("policies/reviewer_policy.json");
     List<Member> members = memberRepository.findAllWithNotNullPolicy(0);
     assertTrue(members.size() > 0);
   }
 
   @Test
   public void findByParam() throws IOException {
-    Member member = createMemberAndSave("./policies/policy.json");
+    Member member = createMemberAndSave("policies/reviewer_policy.json");
     Member byParam = memberRepository.findByParam(member.getId());
     System.out.println(byParam);
   }
 
   @Test
   public void save() throws IOException {
-    Member save = createMemberAndSave("./policies/policy.json");
+    Member save = createMemberAndSave("policies/reviewer_policy.json");
     assertNotNull(save.getId());
   }
 

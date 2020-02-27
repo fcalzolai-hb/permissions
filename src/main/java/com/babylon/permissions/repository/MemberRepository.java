@@ -20,4 +20,11 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
       " WHERE 'm.policy -> :index' is not null")
   List<Member> findAllWithNotNullPolicy(@Param("index") int index);
 
+
+  @Query(value = "select * " +
+      "from member, jsonb_array_elements(policy#>'{resources}') resources, jsonb_array_elements(resources->'locales') locales " +
+      "where jsonb_exists(locales, :locale)",
+      nativeQuery = true)
+  Member findMember(@Param("locale") String locale);
+
 }

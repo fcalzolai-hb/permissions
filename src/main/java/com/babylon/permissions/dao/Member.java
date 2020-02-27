@@ -20,7 +20,7 @@ import org.hibernate.annotations.TypeDef;
 @NoArgsConstructor
 @Builder
 @TypeDef(
-    name = "json",
+    name = "jsonb",
     typeClass = JsonBinaryType.class
 )
 public class Member {
@@ -31,8 +31,8 @@ public class Member {
   private byte[] encryptedFullName;
   private byte[] encryptedEmail;
 
-  @Type(type = "json")
-  @Column(columnDefinition = "json")
+  @Type(type = "jsonb")
+  @Column(columnDefinition = "jsonb")
   private String policy;
 
   private OffsetDateTime createdAt;

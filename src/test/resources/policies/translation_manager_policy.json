@@ -1,0 +1,46 @@
+[
+  {
+    "actions": [
+      "update_translation",
+      "create_partner_key"
+    ],
+    "effect": "allow",
+    "resources": [
+      {
+        "locales": [
+          "en-GB"
+        ],
+        "projects": [
+          {
+            "id": "ea8b601b-0ebc-4310-b512-ee7df8240e9f"
+          },
+          {
+            "id": "128b601b-0ebc-4310-b512-ee7df8240e9f"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "actions": [
+      "create_regional_key"
+    ],
+    "effect": "allow",
+    "resources": [
+      {
+        "locales": [
+          "es-ES",
+          "en-GB"
+        ],
+        "projects": [
+          {
+            "id": "f9c33138-568b-41b3-a25d-5741e72698a1"
+          },
+          {
+            "id": "3cfe6835-32a0-4c96-8855-63b01d298f61"
+          }
+        ]
+      }
+    ]
+  }
+]
